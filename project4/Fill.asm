@@ -3,63 +3,61 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/04/Fill.asm
 
-// Runs an infinite loop that listens to the keyboard input. 
+// Runs an infinite loop that listens to the keyboard input.
 // When a key is pressed (any key), the program blackens the screen,
-// i.e. writes "black" in every pixel. When no key is pressed, the
-// program clears the screen, i.e. writes "white" in every pixel.
+// i.e. writes "black" in every pixel;
+// the screen should remain fully black as long as the key is pressed. 
+// When no key is pressed, the program clears the screen, i.e. writes
+// "white" in every pixel;
+// the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
 
 (RESTART)
 @SCREEN
-D=A
-@0
-M=D	//PUT SCREEN START LOCATION IN RAM0
+D=M
+@R0
+M=D  // SCREEN IN R0
 
-///////////////////////////
 (KBDCHECK)
-
 @KBD
 D=M
 @BLACK
-D;JGT	//JUMP IF ANY KBD KEYS ARE PRESSED
+D;JNE
 @WHITE
-D;JEQ	//ELSE JUMP TO WHITEN
+D;JEQ
 
 @KBDCHECK
 0;JMP
-///////////////////////////
-(BLACK)
-@1
-M=-1	//WHAT TO FILL SCREEN WITH (-1=11111111111111)
+
+@BLACK 
+M=-1
 @CHANGE
 0;JMP
 
-(WHITE)
-@1
-M=0	//WHAT TO FILL SCREEN WITH
+@WHITE
+M=0
 @CHANGE
 0;JMP
-//////////////////////////
+
 (CHANGE)
-@1	//CHECK WHAT TO FILL SCREEN WITH
-D=M	//D CONTAINS BLACK OR WHITE
+@1
+D=M
 
 @0
-A=M	//GET ADRESS OF SCREEN PIXEL TO FILL
-M=D	//FILL IT
+A=M
+M=D
 
 @0
-D=M+1	//INC TO NEXT PIXEL
+D=M+1
 @KBD
-D=A-D	//KBD-SCREEN=A
+D=A-D
 
 @0
-M=M+1	//INC TO NEXT PIXEL
+M=M+1
 A=M
 
 @CHANGE
-D;JGT	//IF A=0 EXIT AS THE WHOLE SCREEN IS BLACK
-/////////////////////////
+D;JGT
 @RESTART
 0;JMP
